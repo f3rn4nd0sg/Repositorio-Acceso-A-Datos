@@ -1,0 +1,31 @@
+{
+  "name": "Madrid",
+  "main": {
+    "temp": 290.77,
+    "feels_like": 290.34,
+    "temp_min": 289.32,
+    "temp_max": 291.29,
+    "pressure": 1024.0,
+    "humidity": 67.0,
+    "sea_level": 0.0,
+    "grnd_level": 0.0
+  },
+  "weather": [
+    {
+      "id": 0,
+      "main": "algo de nubes",
+      "description": "algo de nubes",
+      "icon": "02n"
+    }
+  ],
+  "sys": {
+    "country": "ES",
+    "sunrise": "2024-10-23T06:34:32",
+    "sunset": "2024-10-23T17:23:21"
+  },
+  "temp": 290.77,
+  "clima": "algo de nubes",
+  "tempCelsius": 17.620000000000005,
+  "humedad": 67.0,
+  "pais": "ES"
+}

@@ -2,6 +2,7 @@ package entidades;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import lombok.Data;
 @AllArgsConstructor
 // En GSON mismo nombre de variables que en el JSON
 // TODO, guardar fecha
-public class TiempoCiudad {
+public class TiempoCiudad implements Serializable {
 	private String name;
 	// El main ES UNA LISTA
 	private mainList main;
@@ -130,7 +131,7 @@ public class TiempoCiudad {
 //Clases para guardar los datos de los arrays y listas
 @Data
 @AllArgsConstructor
-class mainList {
+class mainList implements Serializable{
 	private double temp;
 	private double feels_like;
 	private double temp_min;
@@ -143,7 +144,7 @@ class mainList {
 
 @Data
 @AllArgsConstructor
-class sysList {
+class sysList implements Serializable{
 	private String country;
 	private String sunrise;
 	private String sunset;
@@ -151,7 +152,7 @@ class sysList {
 
 @Data
 @AllArgsConstructor
-class weatherArray {
+class weatherArray implements Serializable{
 	private int id;
 	private String main;
 	private String description;

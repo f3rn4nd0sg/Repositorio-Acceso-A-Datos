@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 
 import clasesUtilidades.InternetUtils;
 import clasesUtilidades.JsonUtils;
+import clasesUtilidades.SerializacionUtils;
 import entidades.TiempoCiudad;
 import entidadesCSV.TiempoCSV;
 
@@ -26,8 +27,8 @@ public class App {
 	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he hecho 
 	public static TiempoCiudad ultimoTiempoCiudad;
 
-	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV // Ruta temporal, no tiene que ser absoluta sino relativa
-			.leerCSV("C:\\Users\\Fernando\\Desktop\\2ºDAM\\Acceso a Datos\\ejercicio_01_28_Obligatorio\\datos.csv");
+	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV
+			.leerCSV("src/main/resources/datos.csv");
 
 	public static void menuOpciones() {
 		System.out.flush();
@@ -82,6 +83,7 @@ public class App {
 			System.out.println(ultimoTiempoCiudad);
 		} catch (Error e) {
 			System.out.println("Error de ciudad");
+			ultimoTiempoCiudad = null;
 		}
 
 	}
@@ -132,7 +134,7 @@ public class App {
 		TiempoCSV.imprimirEvolucionTemperatura(tiemposCSV, fechaInicio, fechaFinal);
 	}
 
-	public static void elegirOpciones() throws InterruptedException {
+	public static void elegirOpciones() throws InterruptedException, IOException {
 		boolean acabado = false;
 		String opcion;
 		do {
@@ -149,8 +151,16 @@ public class App {
 				evoluciónRangoFechas();
 				break;
 			case "4":
+				if(ultimoTiempoCiudad != null) {
+					if(SerializacionUtils.serializarObjetoAJson(ultimoTiempoCiudad,"src/main/resources/tiempos.dat"))
+						System.out.println("Tiempo Serializado!");
+					else
+						System.out.println("Error al serializar!");
+				}else
+					System.out.println("No has hecho ninguna busqueda o hay algún problema con ella :(");
 				break;
 			case "5":
+					 System.out.println(SerializacionUtils.deserializarObjetoDeJson("src/main/resources/tiempos.dat").toString());
 				break;
 			case "6":
 				break;
@@ -167,7 +177,7 @@ public class App {
 		} while (!acabado);
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		elegirOpciones();
 	}
 }
