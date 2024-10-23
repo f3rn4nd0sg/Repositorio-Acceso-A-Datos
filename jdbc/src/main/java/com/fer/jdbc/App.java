@@ -67,7 +67,7 @@ public class App {
 
 
 
-	@SuppressWarnings("finally")
+	@SuppressWarnings({ "finally", "unused" })
 	private static List<Evento> ejemplo2(){ //Carga todos los eventos en una lista y la devuelve
 		List<Evento> eventos = new ArrayList<Evento>();
 		Connection con = null;
