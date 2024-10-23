@@ -23,7 +23,7 @@ import entidadesCSV.TiempoCSV;
 public class App {
 	public static Scanner sc = new Scanner(System.in);
 	
-	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he hecho
+	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he hecho 
 	public static TiempoCiudad ultimoTiempoCiudad;
 
 	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV // Ruta temporal, no tiene que ser absoluta sino relativa
