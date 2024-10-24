@@ -3,6 +3,8 @@ package entidades;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class TiempoCiudad implements Serializable {
 	private double tempCelsius;
 	private double humedad;
 	private String pais;
+	private String dt;
 
 	// Método para asegurar que se guardan los datos en el objeto al leer desde json
 	public void guardarDatosJson() {
@@ -42,6 +45,11 @@ public class TiempoCiudad implements Serializable {
 		this.tempCelsius = this.main.getTemp() - 273.15;
 		this.humedad = this.main.getHumidity();
 		this.pais = this.sys.getCountry();
+		//Convierte el dateTime que me da en json a un formato YYYY-MM-DD
+		this.dt = Instant.ofEpochSecond(Long.parseLong(dt))
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate()
+                .toString();
 	}
 
 	// Método para leer datos desde un String XML usando DOM, TODO probar a eliminar
@@ -66,6 +74,12 @@ public class TiempoCiudad implements Serializable {
 		// Leer datos de humedad
 		Element humidityElement = (Element) document.getElementsByTagName("humidity").item(0);
 		double humedad = Double.parseDouble(humidityElement.getAttribute("value"));
+		
+		// Leer datos dateTime
+		Element dtElement = (Element) document.getElementsByTagName("lastupdate").item(0);
+		String dt = dtElement.getAttribute("value");
+		//Convierte la ultima actualizacion de datos (parecido al DateTime) a un formato YYYY-MM-DD
+		dt = dt.split("T")[0];
 
 		// Leer datos de 'main'
 		double feelsLike = Double.parseDouble(getElementAttribute(document, "feels_like", "value"));
@@ -96,7 +110,7 @@ public class TiempoCiudad implements Serializable {
 		sysList sys = new sysList(pais, sunrise, sunset);
 
 		// Crear y devolver el objeto TiempoCiudad
-		return new TiempoCiudad(name, main, weather, sys, tempKelvin, clima, tempCelsius, humedad, pais);
+		return new TiempoCiudad(name, main, weather, sys, tempKelvin, clima, tempCelsius, humedad, pais,dt);
 	}
 
 	// Métodos para lectura del xml más sencillos

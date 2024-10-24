@@ -2,6 +2,7 @@ package com.fer.ejercicio_01_28_Obligatorio;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +24,7 @@ import entidadesCSV.TiempoCSV;
  */
 public class App {
 	public static Scanner sc = new Scanner(System.in);
+	private static String rutaTiemposDat = "src/main/resources/tiempos.dat"; 
 	
 	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he hecho 
 	public static TiempoCiudad ultimoTiempoCiudad;
@@ -50,6 +52,7 @@ public class App {
 		// Guardo el objeto
 		ultimoTiempoCiudad = JsonUtils.leerGenerico("https://api.openweathermap.org/data/2.5/weather?lat=" + latitud
 				+ "&lon=" + longitud + "&lang=es&appid=d0e3de17102f61907397677149452be7", TiempoCiudad.class);
+		ultimoTiempoCiudad.guardarDatosJson();
 		System.out.println(ultimoTiempoCiudad.toString());
 		System.out.println();
 		System.out.println("Pulsa tecla enter para continuar");
@@ -87,12 +90,14 @@ public class App {
 		}
 
 	}
+	
 
 	public static void tiempoCiudadLatLong() {// Latitud entre -90 y 90, Longitud entre -180 y 180
 		boolean infoCorrecta = true;
 		try {
 			do {
 				System.out.flush();
+				JsonUtils.limpiarPantalla();
 				System.out.println("Introducir latitud:");
 				double latitud = Double.parseDouble(sc.nextLine());
 				if (latitud > -90 || latitud < 90) {
@@ -134,7 +139,7 @@ public class App {
 		TiempoCSV.imprimirEvolucionTemperatura(tiemposCSV, fechaInicio, fechaFinal);
 	}
 
-	public static void elegirOpciones() throws InterruptedException, IOException {
+	public static void elegirOpciones(){
 		boolean acabado = false;
 		String opcion;
 		do {
@@ -152,15 +157,29 @@ public class App {
 				break;
 			case "4":
 				if(ultimoTiempoCiudad != null) {
-					if(SerializacionUtils.serializarObjetoAJson(ultimoTiempoCiudad,"src/main/resources/tiempos.dat"))
-						System.out.println("Tiempo Serializado!");
-					else
-						System.out.println("Error al serializar!");
+					//try {
+						//List<TiempoCiudad> tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
+					//} catch (IOException e) {
+					//	System.out.println("Error deserializando :(");
+					//}
+					try {
+						if(SerializacionUtils.serializarObjetoAJson(ultimoTiempoCiudad,rutaTiemposDat))
+							System.out.println("Tiempo Serializado!");
+						else
+							System.out.println("Error al serializar!");
+					} catch (IOException e) {
+						System.out.println("Error con fichero");
+					}
 				}else
 					System.out.println("No has hecho ninguna busqueda o hay algún problema con ella :(");
 				break;
 			case "5":
-					 System.out.println(SerializacionUtils.deserializarObjetoDeJson("src/main/resources/tiempos.dat").toString());
+				try {
+					//Si solo hay un item peta, asi que meter más tiempos
+					System.out.println(SerializacionUtils.deserializarListaDeJson(rutaTiemposDat).toString());
+				} catch (IOException e) {
+					System.out.println("Error con fichero");
+				}
 				break;
 			case "6":
 				break;
@@ -170,8 +189,6 @@ public class App {
 				break;
 			default:
 				System.out.println("Error al elegir opción, intentalo de nuevo :(");
-				// TODO esto para que tarde un poquito en borrar la pantalla
-				Thread.sleep(500);
 			}
 
 		} while (!acabado);
