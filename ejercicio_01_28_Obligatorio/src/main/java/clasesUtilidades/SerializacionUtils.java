@@ -72,13 +72,10 @@ public class SerializacionUtils {
 		return false;
 
 	}
-	
-	
 
 	public static <T> List<T> deserializarListaObjetos(String rutaCompleta) {
 		try {
 			ObjectInputStream ficheroObjetos = new ObjectInputStream(new FileInputStream(new File(rutaCompleta)));
-			@SuppressWarnings("unchecked")
 			List<T> lista = (List<T>) ficheroObjetos.readObject(); // Serializa
 			ficheroObjetos.close();
 			return lista;
@@ -91,72 +88,84 @@ public class SerializacionUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Dado un objeto tiempo y una ruta, serializa el objeto en el archivo a JSON
+	 * 
 	 * @param tiempo
 	 * @param archivo
 	 * @throws IOException
 	 * @returns true si se ha podido, false si ha petado
 	 */
 	public static boolean serializarObjetoAJson(TiempoCiudad tiempo, String archivo) throws IOException {
-	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    try (Writer writer = new FileWriter(archivo)) {
-	        gson.toJson(tiempo, writer);
-	        return true;
-	    }catch (Exception e) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		try (Writer writer = new FileWriter(archivo)) {
+			gson.toJson(tiempo, writer);
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Dado un archivo con Tiempos serializados, devuelve una lista de Tiempos
+	 * 
 	 * @param archivo
 	 * @return Lista de tiempos desserializados
 	 * @throws IOException
 	 */
 	public static List<TiempoCiudad> deserializarListaDeJson(String archivo) throws IOException {
-	    Gson gson = new Gson();
-	    Type listType = new TypeToken<List<TiempoCiudad>>(){}.getType();
-	    try (Reader reader = new FileReader(archivo)) {
-	        return gson.fromJson(reader, listType);
-	    }
+		Gson gson = new Gson();
+		Type listType = new TypeToken<List<TiempoCiudad>>() {
+		}.getType();
+		try (Reader reader = new FileReader(archivo)) {
+			return gson.fromJson(reader, listType);
+		}
 	}
-	
+
 	public static TiempoCiudad deserializarObjetoDeJson(String archivo) throws IOException {
-	    Gson gson = new Gson();
-	    try (Reader reader = new FileReader(archivo)) {
-	        return gson.fromJson(reader, TiempoCiudad.class);
-	    }
+		Gson gson = new Gson();
+		try (Reader reader = new FileReader(archivo)) {
+			return gson.fromJson(reader, TiempoCiudad.class);
+		}
 	}
-	
+
 	/**
-	 * Dado una lista de tiempos y una archivo, serializa los objetos 
+	 * Dado una lista de tiempos y una archivo, serializa los objetos
+	 * 
 	 * @param listaTiempo
 	 * @param archivo
 	 * @return true si se ha podido, false si algo ha fallado
 	 * @throws IOException
 	 */
 	public static boolean serializarListaAJson(List<TiempoCiudad> listaTiempo, String archivo) throws IOException {
-	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    try (Writer writer = new FileWriter(archivo)) {
-	        gson.toJson(listaTiempo, writer); // Serializa la lista en lugar de un objeto
-	        return true;
-	    } catch (Exception e) {
-	        return false;
-	    }
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		try (Writer writer = new FileWriter(archivo)) {
+			gson.toJson(listaTiempo, writer); // Serializa la lista en lugar de un objeto
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
-	
-	public static void reemplazarTiempo(List<TiempoCiudad> lista, TiempoCiudad nuevoTiempo) {
-	    TiempoCiudad aux = lista.stream().filter(t-> t.getDt().equalsIgnoreCase(nuevoTiempo.getDt())).findFirst().orElse(null);// Devuelve null si no se encuentra
 
-	    if (aux != null) {
-	    	System.out.println("Tiempo con mismo día encontrado y sustituido");
-	        lista.set(lista.indexOf(aux), nuevoTiempo); // Reemplazar el objeto existente
-	    } else {
-	    	System.out.println("No hay tiempos, agregado");
-	        lista.add(nuevoTiempo);
-	    }
-	} 
+	/**
+	 * Dado una lista de tiempos y un tiempo, si este tiene el mismo dia que un
+	 * tiempo de la lista, lo sustituye, si no, lo agrega
+	 * 
+	 * @param lista
+	 * @param nuevoTiempo
+	 */
+	public static void reemplazarTiempo(List<TiempoCiudad> lista, TiempoCiudad nuevoTiempo) {
+		TiempoCiudad aux = lista.stream().filter(t -> t.getDt().equalsIgnoreCase(nuevoTiempo.getDt())).findFirst()
+				.orElse(null);// Devuelve null si no se encuentra
+
+		if (aux != null) {
+			System.out.println("Tiempo con mismo día encontrado y sustituido");
+			lista.set(lista.indexOf(aux), nuevoTiempo); // Reemplazar el objeto existente
+		} else {
+			System.out.println("No hay tiempos con el mismo día, agregado");
+			lista.add(nuevoTiempo);
+		}
+	}
 
 }

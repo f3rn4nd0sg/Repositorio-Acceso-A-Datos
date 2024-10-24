@@ -32,34 +32,34 @@
     "dt": "2024-10-23"
   },
   {
-    "name": "Valencia",
+    "name": "Barcelona",
     "main": {
-      "temp": 293.17,
-      "feels_like": 292.51,
-      "temp_min": 292.61,
-      "temp_max": 295.86,
-      "pressure": 1021.0,
-      "humidity": 49.0,
+      "temp": 294.57,
+      "feels_like": 294.62,
+      "temp_min": 293.29,
+      "temp_max": 296.93,
+      "pressure": 1022.0,
+      "humidity": 71.0,
       "sea_level": 0.0,
       "grnd_level": 0.0
     },
     "weather": [
       {
         "id": 0,
-        "main": "muy nuboso",
-        "description": "muy nuboso",
-        "icon": "04d"
+        "main": "algo de nubes",
+        "description": "algo de nubes",
+        "icon": "02d"
       }
     ],
     "sys": {
       "country": "ES",
-      "sunrise": "2024-10-24T06:22:41",
-      "sunset": "2024-10-24T17:12:01"
+      "sunrise": "2024-10-24T06:13:35",
+      "sunset": "2024-10-24T16:57:10"
     },
-    "temp": 293.17,
-    "clima": "muy nuboso",
-    "tempCelsius": 20.02000000000004,
-    "humedad": 49.0,
+    "temp": 294.57,
+    "clima": "algo de nubes",
+    "tempCelsius": 21.420000000000016,
+    "humedad": 71.0,
     "pais": "ES",
     "dt": "2024-10-24"
   }

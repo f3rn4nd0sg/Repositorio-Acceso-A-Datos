@@ -59,8 +59,6 @@ public class App {
 		System.out.println("Pulsa tecla enter para continuar");
 	}
 
-	// TODO
-	// Creada la clase, ahora adapatar metodos o algo no se
 	public static void tiempoCiudadNombre() {
 		boolean infoCorrecta = true;
 		do {
@@ -141,7 +139,7 @@ public class App {
 		TiempoCSV.imprimirEvolucionTemperatura(tiemposCSV, fechaInicio, fechaFinal);
 	}
 
-	public static void elegirOpciones(){
+	public static void elegirOpciones() {
 		boolean acabado = false;
 		String opcion;
 		do {
@@ -162,34 +160,32 @@ public class App {
 				try {
 					tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
 				} catch (IOException e) {
-					//Error deserializando
+					// Error deserializando
 				}
-				//Hay ultimoTiempoCiudad
-				if(ultimoTiempoCiudad != null) { 
+				// Hay ultimoTiempoCiudad
+				if (ultimoTiempoCiudad != null) {
 					try {
-						//Hay tiempos en el fichero
-						if(tiemposEnFichero != null)
-						{
-							//Reemplaza el tiempo si tiene el mismo día, si no, lo añade
+						// Hay tiempos en el fichero
+						if (tiemposEnFichero != null) {
+							// Reemplaza el tiempo si tiene el mismo día, si no, lo añade
 							SerializacionUtils.reemplazarTiempo(tiemposEnFichero, ultimoTiempoCiudad);
-							if(SerializacionUtils.serializarListaAJson(tiemposEnFichero, rutaTiemposDat)) {
+							if (SerializacionUtils.serializarListaAJson(tiemposEnFichero, rutaTiemposDat)) {
 								System.out.println("Serializado!");
-							}
-							else {
+							} else {
 								System.out.println("Error al serializar!");
 							}
-						}
-						else
+						} else
 							System.out.println("Error al serializar!");
 					} catch (IOException e) {
 						System.out.println("Error con fichero");
 					}
-				}else
+				} else
 					System.out.println("No has hecho ninguna busqueda o hay algún problema con ella :(");
 				break;
 			case "5":
-				try { //Este apartado lo hace todo bien
-					SerializacionUtils.deserializarListaDeJson(rutaTiemposDat).stream().forEach(t->System.out.println(t));
+				try {
+					SerializacionUtils.deserializarListaDeJson(rutaTiemposDat).stream()
+							.forEach(t -> System.out.println(t));
 				} catch (IOException e) {
 					System.out.println("Error con fichero");
 				}

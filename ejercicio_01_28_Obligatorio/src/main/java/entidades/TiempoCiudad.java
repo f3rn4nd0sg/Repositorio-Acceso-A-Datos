@@ -24,7 +24,7 @@ import lombok.Data;
 @AllArgsConstructor
 // En GSON mismo nombre de variables que en el JSON
 // TODO, guardar fecha
-public class TiempoCiudad implements Serializable {
+public class TiempoCiudad {
 	private String name;
 	// El main ES UNA LISTA
 	private mainList main;
@@ -45,11 +45,8 @@ public class TiempoCiudad implements Serializable {
 		this.tempCelsius = this.main.getTemp() - 273.15;
 		this.humedad = this.main.getHumidity();
 		this.pais = this.sys.getCountry();
-		//Convierte el dateTime que me da en json a un formato YYYY-MM-DD
-		this.dt = Instant.ofEpochSecond(Long.parseLong(dt))
-                .atZone(ZoneId.of("UTC"))
-                .toLocalDate()
-                .toString();
+		// Convierte el dateTime que me da en json a un formato YYYY-MM-DD
+		this.dt = Instant.ofEpochSecond(Long.parseLong(dt)).atZone(ZoneId.of("UTC")).toLocalDate().toString();
 	}
 
 	// Método para leer datos desde un String XML usando DOM, TODO probar a eliminar
@@ -74,11 +71,12 @@ public class TiempoCiudad implements Serializable {
 		// Leer datos de humedad
 		Element humidityElement = (Element) document.getElementsByTagName("humidity").item(0);
 		double humedad = Double.parseDouble(humidityElement.getAttribute("value"));
-		
+
 		// Leer datos dateTime
 		Element dtElement = (Element) document.getElementsByTagName("lastupdate").item(0);
 		String dt = dtElement.getAttribute("value");
-		//Convierte la ultima actualizacion de datos (parecido al DateTime) a un formato YYYY-MM-DD
+		// Convierte la ultima actualizacion de datos (parecido al DateTime) a un
+		// formato YYYY-MM-DD
 		dt = dt.split("T")[0];
 
 		// Leer datos de 'main'
@@ -109,8 +107,7 @@ public class TiempoCiudad implements Serializable {
 		String sunset = sunElement.getAttribute("set");
 		sysList sys = new sysList(pais, sunrise, sunset);
 
-		// Crear y devolver el objeto TiempoCiudad
-		return new TiempoCiudad(name, main, weather, sys, tempKelvin, clima, tempCelsius, humedad, pais,dt);
+		return new TiempoCiudad(name, main, weather, sys, tempKelvin, clima, tempCelsius, humedad, pais, dt);
 	}
 
 	// Métodos para lectura del xml más sencillos
@@ -141,11 +138,10 @@ public class TiempoCiudad implements Serializable {
 
 }
 
-
 //Clases para guardar los datos de los arrays y listas
 @Data
 @AllArgsConstructor
-class mainList implements Serializable{
+class mainList {
 	private double temp;
 	private double feels_like;
 	private double temp_min;
@@ -158,7 +154,7 @@ class mainList implements Serializable{
 
 @Data
 @AllArgsConstructor
-class sysList implements Serializable{
+class sysList {
 	private String country;
 	private String sunrise;
 	private String sunset;
@@ -166,7 +162,7 @@ class sysList implements Serializable{
 
 @Data
 @AllArgsConstructor
-class weatherArray implements Serializable{
+class weatherArray {
 	private int id;
 	private String main;
 	private String description;
