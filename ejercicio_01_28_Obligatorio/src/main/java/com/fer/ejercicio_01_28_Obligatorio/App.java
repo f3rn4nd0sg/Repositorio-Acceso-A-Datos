@@ -3,6 +3,7 @@ package com.fer.ejercicio_01_28_Obligatorio;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,13 +25,13 @@ import entidadesCSV.TiempoCSV;
  */
 public class App {
 	public static Scanner sc = new Scanner(System.in);
-	private static String rutaTiemposDat = "src/main/resources/tiempos.dat"; 
-	
-	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he hecho 
+	private static String rutaTiemposDat = "src/main/resources/tiempos.dat";
+
+	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he
+	// hecho
 	public static TiempoCiudad ultimoTiempoCiudad;
 
-	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV
-			.leerCSV("src/main/resources/datos.csv");
+	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV.leerCSV("src/main/resources/datos.csv");
 
 	public static void menuOpciones() {
 		System.out.flush();
@@ -77,10 +78,12 @@ public class App {
 	public static void ImprimirTiempoCiudadNombreXML(String nombreCiudad) {
 		try {
 			try {
-				ultimoTiempoCiudad = TiempoCiudad.leerDesdeXML(InternetUtils.readUrl("https://api.openweathermap.org/data/2.5/weather?q=" + nombreCiudad
-						+ "&lang=es&mode=xml&appid=d0e3de17102f61907397677149452be7"));
+				ultimoTiempoCiudad = TiempoCiudad
+						.leerDesdeXML(InternetUtils.readUrl("https://api.openweathermap.org/data/2.5/weather?q="
+								+ nombreCiudad + "&lang=es&mode=xml&appid=d0e3de17102f61907397677149452be7"));
 			} catch (ParserConfigurationException | SAXException | IOException e) {
-				System.out.println("Error :(");;
+				System.out.println("Error :(");
+				;
 			}
 
 			System.out.println(ultimoTiempoCiudad);
@@ -90,7 +93,6 @@ public class App {
 		}
 
 	}
-	
 
 	public static void tiempoCiudadLatLong() {// Latitud entre -90 y 90, Longitud entre -180 y 180
 		boolean infoCorrecta = true;
@@ -129,7 +131,7 @@ public class App {
 
 	}
 
-	//TODO meter comprobación para fechas
+	// TODO meter comprobación para fechas
 	public static void evoluciónRangoFechas() {
 		System.out.println("Introduce fecha de inicio (yyyy-MM-dd): ");
 		String fechaInicio = sc.nextLine();
@@ -156,15 +158,27 @@ public class App {
 				evoluciónRangoFechas();
 				break;
 			case "4":
-				if(ultimoTiempoCiudad != null) {
-					//try {
-						//List<TiempoCiudad> tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
-					//} catch (IOException e) {
-					//	System.out.println("Error deserializando :(");
-					//}
+				List<TiempoCiudad> tiemposEnFichero = null;
+				try {
+					tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
+				} catch (IOException e) {
+					//Error deserializando
+				}
+				//Hay ultimoTiempoCiudad
+				if(ultimoTiempoCiudad != null) { 
 					try {
-						if(SerializacionUtils.serializarObjetoAJson(ultimoTiempoCiudad,rutaTiemposDat))
-							System.out.println("Tiempo Serializado!");
+						//Hay tiempos en el fichero
+						if(tiemposEnFichero != null)
+						{
+							//Reemplaza el tiempo si tiene el mismo día, si no, lo añade
+							SerializacionUtils.reemplazarTiempo(tiemposEnFichero, ultimoTiempoCiudad);
+							if(SerializacionUtils.serializarListaAJson(tiemposEnFichero, rutaTiemposDat)) {
+								System.out.println("Serializado!");
+							}
+							else {
+								System.out.println("Error al serializar!");
+							}
+						}
 						else
 							System.out.println("Error al serializar!");
 					} catch (IOException e) {
@@ -174,9 +188,8 @@ public class App {
 					System.out.println("No has hecho ninguna busqueda o hay algún problema con ella :(");
 				break;
 			case "5":
-				try {
-					//Si solo hay un item peta, asi que meter más tiempos
-					System.out.println(SerializacionUtils.deserializarListaDeJson(rutaTiemposDat).toString());
+				try { //Este apartado lo hace todo bien
+					SerializacionUtils.deserializarListaDeJson(rutaTiemposDat).stream().forEach(t->System.out.println(t));
 				} catch (IOException e) {
 					System.out.println("Error con fichero");
 				}

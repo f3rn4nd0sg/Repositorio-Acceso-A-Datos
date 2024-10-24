@@ -1,32 +1,66 @@
-{
-  "name": "Alicante",
-  "main": {
+[
+  {
+    "name": "Alicante",
+    "main": {
+      "temp": 296.91,
+      "feels_like": 296.99,
+      "temp_min": 296.46,
+      "temp_max": 297.91,
+      "pressure": 1022.0,
+      "humidity": 63.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "nubes",
+        "description": "nubes",
+        "icon": "04d"
+      }
+    ],
+    "sys": {
+      "country": "ES",
+      "sunrise": "2024-10-24T06:19:56",
+      "sunset": "2024-10-24T17:11:56"
+    },
     "temp": 296.91,
-    "feels_like": 296.99,
-    "temp_min": 296.46,
-    "temp_max": 297.91,
-    "pressure": 1022.0,
-    "humidity": 63.0,
-    "sea_level": 0.0,
-    "grnd_level": 0.0
+    "clima": "nubes",
+    "tempCelsius": 23.760000000000048,
+    "humedad": 63.0,
+    "pais": "ES",
+    "dt": "2024-10-23"
   },
-  "weather": [
-    {
-      "id": 0,
-      "main": "nubes",
-      "description": "nubes",
-      "icon": "04d"
-    }
-  ],
-  "sys": {
-    "country": "ES",
-    "sunrise": "2024-10-24T06:19:56",
-    "sunset": "2024-10-24T17:11:56"
-  },
-  "temp": 296.91,
-  "clima": "nubes",
-  "tempCelsius": 23.760000000000048,
-  "humedad": 63.0,
-  "pais": "ES",
-  "dt": "2024-10-24"
-}
+  {
+    "name": "Barcelona",
+    "main": {
+      "temp": 294.57,
+      "feels_like": 294.62,
+      "temp_min": 293.29,
+      "temp_max": 296.93,
+      "pressure": 1022.0,
+      "humidity": 71.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "algo de nubes",
+        "description": "algo de nubes",
+        "icon": "02d"
+      }
+    ],
+    "sys": {
+      "country": "ES",
+      "sunrise": "2024-10-24T06:13:35",
+      "sunset": "2024-10-24T16:57:10"
+    },
+    "temp": 294.57,
+    "clima": "algo de nubes",
+    "tempCelsius": 21.420000000000016,
+    "humedad": 71.0,
+    "pais": "ES",
+    "dt": "2024-10-24"
+  }
+]

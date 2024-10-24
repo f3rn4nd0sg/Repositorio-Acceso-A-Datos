@@ -129,5 +129,34 @@ public class SerializacionUtils {
 	        return gson.fromJson(reader, TiempoCiudad.class);
 	    }
 	}
+	
+	/**
+	 * Dado una lista de tiempos y una archivo, serializa los objetos 
+	 * @param listaTiempo
+	 * @param archivo
+	 * @return true si se ha podido, false si algo ha fallado
+	 * @throws IOException
+	 */
+	public static boolean serializarListaAJson(List<TiempoCiudad> listaTiempo, String archivo) throws IOException {
+	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	    try (Writer writer = new FileWriter(archivo)) {
+	        gson.toJson(listaTiempo, writer); // Serializa la lista en lugar de un objeto
+	        return true;
+	    } catch (Exception e) {
+	        return false;
+	    }
+	}
+	
+	public static void reemplazarTiempo(List<TiempoCiudad> lista, TiempoCiudad nuevoTiempo) {
+	    TiempoCiudad aux = lista.stream().filter(t-> t.getDt().equalsIgnoreCase(nuevoTiempo.getDt())).findFirst().orElse(null);// Devuelve null si no se encuentra
+
+	    if (aux != null) {
+	    	System.out.println("Tiempo con mismo día encontrado y sustituido");
+	        lista.set(lista.indexOf(aux), nuevoTiempo); // Reemplazar el objeto existente
+	    } else {
+	    	System.out.println("No hay tiempos, agregado");
+	        lista.add(nuevoTiempo);
+	    }
+	} 
 
 }

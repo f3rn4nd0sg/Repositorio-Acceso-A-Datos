@@ -1,32 +1,66 @@
-{
-  "name": "Alicante",
-  "main": {
+[
+  {
+    "name": "Alicante",
+    "main": {
+      "temp": 296.91,
+      "feels_like": 296.99,
+      "temp_min": 296.46,
+      "temp_max": 297.91,
+      "pressure": 1022.0,
+      "humidity": 63.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "nubes",
+        "description": "nubes",
+        "icon": "04d"
+      }
+    ],
+    "sys": {
+      "country": "ES",
+      "sunrise": "2024-10-24T06:19:56",
+      "sunset": "2024-10-24T17:11:56"
+    },
     "temp": 296.91,
-    "feels_like": 296.99,
-    "temp_min": 296.46,
-    "temp_max": 297.91,
-    "pressure": 1022.0,
-    "humidity": 63.0,
-    "sea_level": 0.0,
-    "grnd_level": 0.0
+    "clima": "nubes",
+    "tempCelsius": 23.760000000000048,
+    "humedad": 63.0,
+    "pais": "ES",
+    "dt": "2024-10-23"
   },
-  "weather": [
-    {
-      "id": 0,
-      "main": "nubes",
-      "description": "nubes",
-      "icon": "04d"
-    }
-  ],
-  "sys": {
-    "country": "ES",
-    "sunrise": "2024-10-24T06:19:56",
-    "sunset": "2024-10-24T17:11:56"
-  },
-  "temp": 296.91,
-  "clima": "nubes",
-  "tempCelsius": 23.760000000000048,
-  "humedad": 63.0,
-  "pais": "ES",
-  "dt": "2024-10-24"
-}
+  {
+    "name": "Valencia",
+    "main": {
+      "temp": 293.17,
+      "feels_like": 292.51,
+      "temp_min": 292.61,
+      "temp_max": 295.86,
+      "pressure": 1021.0,
+      "humidity": 49.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "muy nuboso",
+        "description": "muy nuboso",
+        "icon": "04d"
+      }
+    ],
+    "sys": {
+      "country": "ES",
+      "sunrise": "2024-10-24T06:22:41",
+      "sunset": "2024-10-24T17:12:01"
+    },
+    "temp": 293.17,
+    "clima": "muy nuboso",
+    "tempCelsius": 20.02000000000004,
+    "humedad": 49.0,
+    "pais": "ES",
+    "dt": "2024-10-24"
+  }
+]
