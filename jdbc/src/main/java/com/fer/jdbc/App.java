@@ -2,11 +2,13 @@ package com.fer.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.fer.jdbc.entidades.Evento;
 import com.fer.jdbc.utilidades.JdbcUtils;
@@ -26,22 +28,9 @@ public class App {
 
 	public static void main(String[] args) {
 		//ejemplo1();
-		
-		
-		if(JdbcUtils.conexionBdd(url, usuario, password)) {
-			ResultSet rs = JdbcUtils.devolverConsulta("select * from evento");
-			try {
-				while(rs.next()) {
-					System.out.println(rs.getObject(1));
-				}
-				//Compruebo que funciona el ejecutar una DML
-				System.out.println("Registros modificados: " + JdbcUtils.ejecutarDML("Insert into evento(nombre,descripcion,precio,fecha) values('Evento4','Descripcion4','10','2024-10-23') "));
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
-		JdbcUtils.cerrarBdd();
-			
+		//ejemplo3();
+		//JdbcUtils.cerrarBdd();
+		ejemplo4(0);
 	}
 
 	public static void ejemplo1() {
@@ -68,7 +57,7 @@ public class App {
 
 
 	@SuppressWarnings({ "finally", "unused" })
-	private static List<Evento> ejemplo2(){ //Carga todos los eventos en una lista y la devuelve
+	private static List<Evento> ejemplo2(){ //Carga todos los eventos en una lista y la devuelveç
 		List<Evento> eventos = new ArrayList<Evento>();
 		Connection con = null;
 		ResultSet rs = null;
@@ -101,4 +90,42 @@ public class App {
 			return eventos != null? eventos:null;
 		}
 	}
+	
+	public static void ejemplo3() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Introduzca el id a buscar");
+		String id = sc.nextLine();
+		
+		JdbcUtils.conexionBdd(url, usuario, password);
+		
+		ResultSet rs = JdbcUtils.devolverConsulta("Select * from evento where id="+ id);
+		
+		try {
+			while(rs.next()) {
+				System.out.println(rs.getObject(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Ha petado");
+		}
+		
+		sc.close();
+	}
+	
+	//Ejemplo de select con preparedStatemente, no se come el SQL injection
+	public static void ejemplo4(int id) {
+		try {
+			Connection con = DriverManager.getConnection(url,usuario,password);
+			PreparedStatement  stmt = con.prepareStatement("select * from evento where id = ?");
+			//aqui le dice que al primer interrogante, ponga el 3
+			stmt.setObject(1, id);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				System.out.println(rs.getInt(1)+" " +rs.getString(2));
+			}
+		} catch (SQLException e) {
+			
+		}
+	}
 }
+
