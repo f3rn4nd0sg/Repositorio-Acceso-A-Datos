@@ -13,12 +13,14 @@ import org.xml.sax.SAXException;
 import clasesUtilidades.InternetUtils;
 import clasesUtilidades.JsonUtils;
 import clasesUtilidades.SerializacionUtils;
+import entidades.NasaImage;
 import entidades.TiempoCiudad;
 import entidadesCSV.TiempoCSV;
 
 /**
  * 
  * Mi key de la API de Weather: d0e3de17102f61907397677149452be7
+ * Mi key de la API del apartado 6 YbbMNWeWX2BqxoPKXEiWWcKMgNlUHhHXgqWG5XBt
  * 
  * Como llamar a la API:
  * https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&langes&appid=d0e3de17102f61907397677149452be7
@@ -26,6 +28,7 @@ import entidadesCSV.TiempoCSV;
 public class App {
 	public static Scanner sc = new Scanner(System.in);
 	private static String rutaTiemposDat = "src/main/resources/tiempos.dat";
+	private static NasaImage nasaImage;
 
 	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he
 	// hecho
@@ -33,6 +36,7 @@ public class App {
 
 	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV.leerCSV("src/main/resources/datos.csv");
 
+	//Menú Opciones
 	public static void menuOpciones() {
 		System.out.flush();
 		System.out.println("Elige una de las opciones:");
@@ -45,9 +49,7 @@ public class App {
 		System.out.println("7. Salir");
 	}
 
-	// Este es el apartado 1, En principio lo hace todo bien, Hacer testing de
-	// errores más adelante
-	// 10/01/2024, Funciona y guarda el objeto
+	//Apartado 1
 	public static void ImprimirTiempoCiudadJSON(double latitud, double longitud) {
 		System.out.println();
 		// Guardo el objeto
@@ -96,8 +98,6 @@ public class App {
 		boolean infoCorrecta = true;
 		try {
 			do {
-				System.out.flush();
-				JsonUtils.limpiarPantalla();
 				System.out.println("Introducir latitud:");
 				double latitud = Double.parseDouble(sc.nextLine());
 				if (latitud > -90 || latitud < 90) {
@@ -191,6 +191,13 @@ public class App {
 				}
 				break;
 			case "6":
+				nasaImage = JsonUtils.leerGenerico("https://api.nasa.gov/planetary/apod?api_key=YbbMNWeWX2BqxoPKXEiWWcKMgNlUHhHXgqWG5XBt" , NasaImage.class);
+				if(nasaImage != null) {
+					System.out.println(nasaImage.toString());
+				}
+				else {
+					System.out.println("Error! :(");
+				}
 				break;
 			case "7":
 				System.out.println("¡Programa terminado!");

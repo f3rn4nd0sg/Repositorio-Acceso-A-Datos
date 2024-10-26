@@ -114,13 +114,6 @@ public class JsonUtils {
 		return new Gson().fromJson(InternetUtils.readUrl(url), clase);
 	}
 	
-	/**
-	 * Limpia la consola
-	 */
-	public static void limpiarPantalla() {
-		for(int i = 0; i < 1000; i++) {
-			System.out.println();
-		}
-	}
+	
 
 }

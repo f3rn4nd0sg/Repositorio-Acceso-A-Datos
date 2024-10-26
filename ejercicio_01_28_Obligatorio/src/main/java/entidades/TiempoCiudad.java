@@ -51,6 +51,15 @@ public class TiempoCiudad {
 
 	// Método para leer datos desde un String XML usando DOM, TODO probar a eliminar
 	// todo lo que no necesito sacar por pantalla y tener un objeto más limpio
+	
+	/**
+	 * Dado un xml pasado como string, devuelve un Objeto TiempoCiudad
+	 * @param xmlContent el String que contiene todo el xml
+	 * @return Objeto tiempoCiudad con los datos del xml
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public static TiempoCiudad leerDesdeXML(String xmlContent)
 			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -58,21 +67,21 @@ public class TiempoCiudad {
 		Document document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
 		document.getDocumentElement().normalize();
 
-		// Leer datos de la ciudad
+		//Datos de la ciudad
 		Element cityElement = (Element) document.getElementsByTagName("city").item(0);
 		String name = cityElement.getAttribute("name");
 		String pais = getElementTextContent(document, "country");
 
-		// Leer datos de temperatura
+		//Datos de temperatura
 		Element tempElement = (Element) document.getElementsByTagName("temperature").item(0);
 		double tempKelvin = Double.parseDouble(tempElement.getAttribute("value"));
 		double tempCelsius = tempKelvin - 273.15;
 
-		// Leer datos de humedad
+		//Datos de humedad
 		Element humidityElement = (Element) document.getElementsByTagName("humidity").item(0);
 		double humedad = Double.parseDouble(humidityElement.getAttribute("value"));
 
-		// Leer datos dateTime
+		//Datos dateTime
 		Element dtElement = (Element) document.getElementsByTagName("lastupdate").item(0);
 		String dt = dtElement.getAttribute("value");
 		// Convierte la ultima actualizacion de datos (parecido al DateTime) a un
@@ -86,7 +95,7 @@ public class TiempoCiudad {
 		double pressure = Double.parseDouble(getElementAttribute(document, "pressure", "value"));
 		mainList main = new mainList(tempKelvin, feelsLike, tempMin, tempMax, pressure, humedad, 0, 0);
 
-		// Leer datos del clima
+		//Datos del clima
 		NodeList weatherNodes = document.getElementsByTagName("weather");
 		List<weatherArray> weather = new ArrayList<>();
 		String clima = null;
