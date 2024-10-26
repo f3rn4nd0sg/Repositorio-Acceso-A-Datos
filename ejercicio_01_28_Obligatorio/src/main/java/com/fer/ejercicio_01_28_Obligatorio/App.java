@@ -1,9 +1,11 @@
 package com.fer.ejercicio_01_28_Obligatorio;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,8 +16,8 @@ import clasesUtilidades.InternetUtils;
 import clasesUtilidades.JsonUtils;
 import clasesUtilidades.SerializacionUtils;
 import entidades.NasaImage;
+import entidades.TiempoCSV;
 import entidades.TiempoCiudad;
-import entidadesCSV.TiempoCSV;
 
 /**
  * 
@@ -29,11 +31,11 @@ public class App {
 	public static Scanner sc = new Scanner(System.in);
 	private static String rutaTiemposDat = "src/main/resources/tiempos.dat";
 	private static NasaImage nasaImage;
-
-	// Objetos TiempoCiudad y TiempoCiudadXML para poder serializar el último que he
-	// hecho
+	private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
+	
+	// Objetos TiempoCiudadpara poder serializar el último que he hecho
+	
 	public static TiempoCiudad ultimoTiempoCiudad;
-
 	public static ArrayList<TiempoCSV> tiemposCSV = TiempoCSV.leerCSV("src/main/resources/datos.csv");
 
 	//Menú Opciones
@@ -129,16 +131,22 @@ public class App {
 
 	}
 
-	// TODO meter comprobación para fechas
-	public static void evoluciónRangoFechas() {
-		System.out.println("Introduce fecha de inicio (yyyy-MM-dd): ");
-		String fechaInicio = sc.nextLine();
-		System.out.println("Introduce fecha de final (yyyy-MM-dd): ");
-		String fechaFinal = sc.nextLine();
+	//Método para comprobar que las fechas sean yyyy-MM-dd
+	public static void evolucionRangoFechas() {
+        System.out.println("Introduce fecha de inicio (yyyy-MM-dd): ");
+        String fechaInicio = sc.nextLine();
+        System.out.println("Introduce fecha de final (yyyy-MM-dd): ");
+        String fechaFinal = sc.nextLine();
 
-		TiempoCSV.imprimirEvolucionTemperatura(tiemposCSV, fechaInicio, fechaFinal);
-	}
+        // Valida formato 
+        if (fechaInicio.matches(DATE_PATTERN) || !fechaFinal.matches(DATE_PATTERN)) {
+        	TiempoCSV.imprimirEvolucionTemperatura(tiemposCSV, fechaInicio, fechaFinal);
+        }
+        else {
+        	System.out.println("Error de formato :(");
+        }    }
 
+	@SuppressWarnings("unused")
 	public static void elegirOpciones() {
 		boolean acabado = false;
 		String opcion;
@@ -153,34 +161,9 @@ public class App {
 				tiempoCiudadNombre();
 				break;
 			case "3":
-				evoluciónRangoFechas();
-				break;
+				evolucionRangoFechas();
 			case "4":
-				List<TiempoCiudad> tiemposEnFichero = null;
-				try {
-					tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
-				} catch (IOException e) {
-					// Error deserializando
-				}
-				// Hay ultimoTiempoCiudad
-				if (ultimoTiempoCiudad != null) {
-					try {
-						// Hay tiempos en el fichero
-						if (tiemposEnFichero != null) {
-							// Reemplaza el tiempo si tiene el mismo día, si no, lo añade
-							SerializacionUtils.reemplazarTiempo(tiemposEnFichero, ultimoTiempoCiudad);
-							if (SerializacionUtils.serializarListaAJson(tiemposEnFichero, rutaTiemposDat)) {
-								System.out.println("Serializado!");
-							} else {
-								System.out.println("Error al serializar!");
-							}
-						} else
-							System.out.println("Error al serializar!");
-					} catch (IOException e) {
-						System.out.println("Error con fichero");
-					}
-				} else
-					System.out.println("No has hecho ninguna busqueda o hay algún problema con ella :(");
+				serializarUltimoTiempoCiudad();
 				break;
 			case "5":
 				try {
@@ -191,13 +174,7 @@ public class App {
 				}
 				break;
 			case "6":
-				nasaImage = JsonUtils.leerGenerico("https://api.nasa.gov/planetary/apod?api_key=YbbMNWeWX2BqxoPKXEiWWcKMgNlUHhHXgqWG5XBt" , NasaImage.class);
-				if(nasaImage != null) {
-					System.out.println(nasaImage.toString());
-				}
-				else {
-					System.out.println("Error! :(");
-				}
+				guardarDatosNasaAPI();
 				break;
 			case "7":
 				System.out.println("¡Programa terminado!");
@@ -208,6 +185,43 @@ public class App {
 			}
 
 		} while (!acabado);
+	}
+
+	private static void guardarDatosNasaAPI() {
+		nasaImage = JsonUtils.leerGenerico("https://api.nasa.gov/planetary/apod?api_key=YbbMNWeWX2BqxoPKXEiWWcKMgNlUHhHXgqWG5XBt" , NasaImage.class);
+		if(nasaImage != null) {
+			System.out.println(nasaImage.toString());
+		}
+		else {
+			System.out.println("Error! :(");
+		}
+	}
+
+	private static void serializarUltimoTiempoCiudad() {
+		List<TiempoCiudad> tiemposEnFichero = null;
+		try {
+			tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
+		} catch (IOException e) {
+			// Error deserializando
+		}
+		// Hay ultimoTiempoCiudad
+		if (ultimoTiempoCiudad != null) {
+			try {
+				// Hay tiempos en el fichero
+				if (tiemposEnFichero != null) {
+					// Reemplaza el tiempo si tiene el mismo día, si no, lo añade
+					SerializacionUtils.reemplazarTiempo(tiemposEnFichero, ultimoTiempoCiudad);
+					if (SerializacionUtils.serializarListaAJson(tiemposEnFichero, rutaTiemposDat)) {
+						System.out.println("Serializado!");
+					} else {
+						System.out.println("Error al serializar!");
+					}
+				} else
+					System.out.println("Error al serializar!");
+			} catch (IOException e) {
+				System.out.println("Error con fichero");
+			}
+		}
 	}
 
 	public static void main(String[] args) throws InterruptedException, IOException {

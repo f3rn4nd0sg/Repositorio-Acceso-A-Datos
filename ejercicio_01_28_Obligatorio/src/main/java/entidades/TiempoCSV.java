@@ -1,4 +1,4 @@
-package entidadesCSV;
+package entidades;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,9 +42,11 @@ public class TiempoCSV {
 
 	// Método para leer todo el csv
 	public static ArrayList<TiempoCSV> leerCSV(String filePath) {
+		
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 			ArrayList<TiempoCSV> listaTiemposCSV = new ArrayList<TiempoCSV>();
 			String line;
+			br.readLine();
 			while ((line = br.readLine()) != null) {
 				TiempoCSV tiempo = tiempoDesdeCSV(line);
 				listaTiemposCSV.add(tiempo);
@@ -60,10 +62,12 @@ public class TiempoCSV {
 
 	// Funcionamiento, transforma las fechas pasadas a LocalDateTime, compara en
 	// toda la lista de datos si el dato está correspondido entre las fechas
-	// TODO Ya funciona pero debería cambiarlo para que sea más eficiente
+	//Construye macroString con todas las fechas que coincide, cuando termina con los datos de una fecha, \n y así con las siguientes
+	//No muy eficiente
 
 	public static void imprimirEvolucionTemperatura(List<TiempoCSV> datos, String fechaInicioStr,
 			String fechaFinalStr) {
+		
 		DateTimeFormatter fechaHoraFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		DateTimeFormatter fechaSalidaFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -95,16 +99,15 @@ public class TiempoCSV {
 			// Buscar la temperatura correspondiente a la fecha y hora actual
 			for (TiempoCSV tiempo : datos) {
 				try {
-					// Verificar si la fecha y hora del registro coinciden con la fechaHora actual
+					// Verifica si la fecha y hora coincide con la fechaHora actual
 					if (tiempo.getFecha().equals(fechaHora.toLocalDate().toString())
 							&& tiempo.getHora().equals(horaFormato)) {
 
-						// Agregar la hora y la temperatura al StringBuilder
+						// Agrega hora y la temperatura al StringBuilder
 						salida.append(horaFormato).append("->").append(String.format("%.2f", tiempo.getTemperatura()))
 								.append(" ");
 
-						// Sale del bucle una vez que se ha agregado la temperatura de la hora
-						// correspondiente
+						// Sale del bucle
 						break;
 					}
 				} catch (Exception e) {
@@ -113,7 +116,7 @@ public class TiempoCSV {
 			}
 		}
 
-		// Imprimir la salida final
+		// Imprime el macroString formado con todas las fechas
 		System.out.println(salida.toString().trim());
 	}
 
