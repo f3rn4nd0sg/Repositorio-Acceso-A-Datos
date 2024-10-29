@@ -19,7 +19,7 @@ public class JdbcUtils {
 	static Connection con; // variable conexion
 	static ResultSet rs; // la tabla de resultados al hacer la consulta
 	static Statement statement; // para hacer las consultas
-	static PreparedStatement stmt; //para hacer consultas seguras
+	static PreparedStatement stmt; // para hacer consultas seguras
 
 	/**
 	 * Dados un parametros, abre la BDD y el statement para poder hacer consultas
@@ -58,7 +58,8 @@ public class JdbcUtils {
 
 	/**
 	 * Dado una query consulta BDD devuelve tabla ResultSet de la consulta o null si
-	 * esta falla, Ejemplo de SQL injection. Introduce 1000 or 1=1 y te devuelve todo :(
+	 * esta falla, Ejemplo de SQL injection. Introduce 1000 or 1=1 y te devuelve
+	 * todo :(
 	 * 
 	 * @param query
 	 * @return ResultSet de la consulta
@@ -86,48 +87,56 @@ public class JdbcUtils {
 			return -1;
 		}
 	}
-	
+
 	/**
-	 * Método genérico que le pasas una sql preparedStatement y tantos atributos como interrogantes hay en la sql
-	 * @param sql query de sql
+	 * Método genérico que le pasas una sql preparedStatement y tantos atributos
+	 * como interrogantes hay en la sql
+	 * 
+	 * @param sql        query de sql
 	 * @param parameters Tantos parametros como interrogantes tenga la sql
 	 * @return ResultSet de la preparedStatement
 	 */
-	public static ResultSet devolverPreparedStatement(String sql,Object...parameters) { //Este object es como un array indefinido de atributos
-		return devolverPreparedStatement(sql, Arrays.asList(parameters));		
+	public static ResultSet devolverPreparedStatement(String sql, Object... parameters) { // Este object es como un
+																							// array indefinido de
+																							// atributos
+		return devolverPreparedStatement(sql, Arrays.asList(parameters));
 	}
-	
+
 	/**
-	 * Método genérico que le pasas una sql preparedStatement y una lista de atributos donde sustituir los datos en los interroganres de la sql
-	 * @param sql query de sql
+	 * Método genérico que le pasas una sql preparedStatement y una lista de
+	 * atributos donde sustituir los datos en los interroganres de la sql
+	 * 
+	 * @param sql        query de sql
 	 * @param parameters Lista de parametros
 	 * @return ResultSet de la preparedStatement
 	 */
-	public static ResultSet devolverPreparedStatement(String sql,List<Object> parameters) {
-		if(parameters.size() != countMatches(sql, '?'))
+	public static ResultSet devolverPreparedStatement(String sql, List<Object> parameters) {
+		if (parameters.size() != countMatches(sql, '?'))
 			return null;
 		else {
 			try {
 				stmt = con.prepareStatement(sql);
-				for(int i = 0; i < parameters.size();i++) {
-					stmt.setObject(i+1, parameters.get(i));
+				for (int i = 0; i < parameters.size(); i++) {
+					stmt.setObject(i + 1, parameters.get(i));
 				}
 				return stmt.executeQuery(sql);
 			} catch (SQLException e) {
 				return null;
 			}
 		}
-		
+
 	}
-	
+
 	/**
-	 * Dado un string y un caracter a buscar, devuelve cuantas veces aparece este en el string
+	 * Dado un string y un caracter a buscar, devuelve cuantas veces aparece este en
+	 * el string
+	 * 
 	 * @param cadena
 	 * @param caracterBuscado
-	 * @return Número de veces que aparece el  caracter
+	 * @return Número de veces que aparece el caracter
 	 */
-	private static int countMatches(String cadena,char caracterBuscado) {
-		return (int)cadena.chars().filter(e->e==caracterBuscado).count();
+	private static int countMatches(String cadena, char caracterBuscado) {
+		return (int) cadena.chars().filter(e -> e == caracterBuscado).count();
 	}
 
 }
