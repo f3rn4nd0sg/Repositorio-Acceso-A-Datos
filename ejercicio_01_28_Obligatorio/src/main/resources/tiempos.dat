@@ -62,5 +62,37 @@
     "humedad": 71.0,
     "pais": "ES",
     "dt": "2024-10-24"
+  },
+  {
+    "name": "Tokyo",
+    "main": {
+      "temp": 290.5,
+      "feels_like": 290.61,
+      "temp_min": 289.59,
+      "temp_max": 291.94,
+      "pressure": 1018.0,
+      "humidity": 89.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "algo de nubes",
+        "description": "algo de nubes",
+        "icon": "02n"
+      }
+    ],
+    "sys": {
+      "country": "JP",
+      "sunrise": "2024-10-26T20:58:18",
+      "sunset": "2024-10-27T07:51:41"
+    },
+    "temp": 290.5,
+    "clima": "algo de nubes",
+    "tempCelsius": 17.350000000000023,
+    "humedad": 89.0,
+    "pais": "JP",
+    "dt": "2024-10-26"
   }
 ]
