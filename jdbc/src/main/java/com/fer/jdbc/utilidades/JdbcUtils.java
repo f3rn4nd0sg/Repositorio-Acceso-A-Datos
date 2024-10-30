@@ -1,14 +1,15 @@
 package com.fer.jdbc.utilidades;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -138,5 +139,31 @@ public class JdbcUtils {
 	private static int countMatches(String cadena, char caracterBuscado) {
 		return (int) cadena.chars().filter(e -> e == caracterBuscado).count();
 	}
+
+	public static Object ejecutarCallableStatement(String metodo, Object... parametros) {
+	    try {
+	        if (countMatches(metodo, '?') != parametros.length) {
+	            return null;
+	        }
+
+	        String sql = "{ call " + metodo + " }";
+	        CallableStatement cStmt = con.prepareCall(sql);
+
+	        cStmt.registerOutParameter(1, Types.JAVA_OBJECT);
+
+	        for (int i = 0; i < parametros.length; i++) {
+	            cStmt.setObject(i+1, parametros[i]);
+	        }
+
+	        cStmt.execute();
+
+	        return cStmt.getObject(1);
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
 
 }

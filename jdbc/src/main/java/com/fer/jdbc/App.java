@@ -34,7 +34,12 @@ public class App {
 		// ejemplo4(0);
 		// insertarPersonas();
 		//insertarFaker();
-		ejemploCallable1();
+		//ejemploCallable1();
+		//llamarFunctionMedianteStatement();
+		//llamarPersonasMedianteStatement();
+		//llamarFunctionRegistro();
+		llamarProcedureGenerico();
+
 	}
 
 	public static void ejemplo1() {
@@ -152,6 +157,9 @@ public class App {
 		JdbcUtils.cerrarBdd();
 	}
 
+	/**
+	 * Este llama a la function directamente
+	 */
 	public static void ejemploCallable1() {
 		try {
 			Connection con = DriverManager.getConnection(url, usuario, password);
@@ -167,6 +175,55 @@ public class App {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Este llama a la function mediante un select y el statement, más comodo (personalmente)
+	 */
+	public static void llamarFunctionMedianteStatement() {
+		try {
+			JdbcUtils.conexionBdd(url, usuario, password);
+			ResultSet rs = JdbcUtils.devolverConsulta("Select * from cantidadpersonas('%Fer%')");
+			while(rs.next())
+				System.out.println(rs.getInt(1));
+			JdbcUtils.cerrarBdd();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void llamarPersonasMedianteStatement() {
+		try {
+			JdbcUtils.conexionBdd(url, usuario, password);
+			ResultSet rs = JdbcUtils.devolverConsulta("Select * from devolver_cantidad_personas()");
+			while(rs.next())
+				System.out.println(rs.getInt(1));
+			JdbcUtils.cerrarBdd();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void llamarFunctionRegistro() {
+		try {
+			Connection con = DriverManager.getConnection(url, usuario, password);
+			CallableStatement stmt = con.prepareCall("{call listar_personas_out()}");
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				System.out.println("ID: " + rs.getObject(1) + " Nombre: " + rs.getObject(2));
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void llamarProcedureGenerico() {
+		JdbcUtils.conexionBdd(url, usuario, password);
+		int numero = (int) JdbcUtils.ejecutarCallableStatement("cantidadpersonas(?)", "%Bayer%");
+		System.out.println("La cantidad de personas es: " +numero);
+		JdbcUtils.cerrarBdd();
 	}
 
 }
