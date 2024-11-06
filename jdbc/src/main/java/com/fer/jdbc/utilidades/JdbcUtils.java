@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +20,7 @@ public class JdbcUtils {
 	static ResultSet rs; // la tabla de resultados al hacer la consulta
 	static Statement statement; // para hacer las consultas
 	static PreparedStatement stmt; // para hacer consultas seguras
+	static CallableStatement cstmt;
 
 	/**
 	 * Dados un parametros, abre la BDD y el statement para poder hacer consultas
@@ -140,29 +140,22 @@ public class JdbcUtils {
 		return (int) cadena.chars().filter(e -> e == caracterBuscado).count();
 	}
 
-	public static Object ejecutarCallableStatement(String metodo, Object... parametros) {
-	    try {
-	        if (countMatches(metodo, '?') != parametros.length) {
-	            return null;
-	        }
-
-	        String sql = "{ call " + metodo + " }";
-	        CallableStatement cStmt = con.prepareCall(sql);
-
-	        cStmt.registerOutParameter(1, Types.JAVA_OBJECT);
-
-	        for (int i = 0; i < parametros.length; i++) {
-	            cStmt.setObject(i+1, parametros[i]);
-	        }
-
-	        cStmt.execute();
-
-	        return cStmt.getObject(1);
-	        
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return null;
+	public static Object ejecutarCallableStatement(String metodo,int tipoDevuelto, Object... parametros) {
+		if(countMatches(metodo,'?')!= parametros.length)
+			return null;
+		try {
+			CallableStatement cStmt = con.prepareCall(
+					 "{call " + metodo + "}");
+			cStmt.registerOutParameter(1, tipoDevuelto);
+			for(int i=1;i<=parametros.length;i++) {
+				cStmt.setObject(i, parametros[i-1]);
+			}
+			cStmt.execute();
+			return cStmt.getObject(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

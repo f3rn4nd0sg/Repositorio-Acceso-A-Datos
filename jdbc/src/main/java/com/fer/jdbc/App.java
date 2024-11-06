@@ -221,7 +221,7 @@ public class App {
 	
 	public static void llamarProcedureGenerico() {
 		JdbcUtils.conexionBdd(url, usuario, password);
-		int numero = (int) JdbcUtils.ejecutarCallableStatement("cantidadpersonas(?)", "%Bayer%");
+		int numero = (int) JdbcUtils.ejecutarCallableStatement("cantidadpersonas(?)",Types.INTEGER, "%Bayer%");
 		System.out.println("La cantidad de personas es: " +numero);
 		JdbcUtils.cerrarBdd();
 	}
