@@ -157,6 +157,28 @@ public class JdbcUtils {
 		}
 		return null;
 	}
+	
+	/**
+	 * Dado el nombre de un metodo y sus astributos devuelve tabla resultado de la consulta
+	 * @param metodo
+	 * @param parametros
+	 * @return
+	 */
+	public static ResultSet resultSetCallableStatement(String metodo,Object... parametros) {
+		if(countMatches(metodo,'?')!= parametros.length)
+			return null;
+		try {
+			cstmt = con.prepareCall("{call " + metodo + "}");			
+			for(int i=1;i<=parametros.length;i++) {
+				cstmt.setObject(i, parametros[i-1]);
+			}			
+			return cstmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 
 }
