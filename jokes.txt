@@ -1,0 +1,98 @@
+CREATE TABLE language (
+    id SERIAL PRIMARY KEY,
+    code CHAR(2) UNIQUE NOT NULL,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE types (
+    id SERIAL PRIMARY KEY,
+    type_name VARCHAR(20) UNIQUE NOT NULL
+);
+
+CREATE TABLE flags (
+    id SERIAL PRIMARY KEY,
+    flag_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Tabla principal para los chistes
+CREATE TABLE jokes (
+    id_chiste INTEGER,
+    id_idioma INTEGER NOT NULL REFERENCES language(id),
+    category_id INTEGER REFERENCES categories(id),
+    type_id INTEGER REFERENCES types(id),
+    joke TEXT,
+    PRIMARY KEY (id_idioma, id_chiste)
+);
+
+-- Tabla intermedia para la relación M:N entre chistes y flags
+CREATE TABLE jokes_flags (
+    joke_id_chiste INTEGER,
+    joke_id_idioma INTEGER,
+    flag_id INTEGER,
+    FOREIGN KEY (joke_id_chiste, joke_id_idioma) REFERENCES jokes (id_chiste, id_idioma),
+    FOREIGN KEY (flag_id) REFERENCES flags(id),
+    PRIMARY KEY (joke_id_chiste, joke_id_idioma, flag_id)
+);
+
+INSERT INTO categories (name) VALUES 
+('Any'), 
+('Misc'), 
+('Programming'), 
+('Dark'), 
+('Pun'), 
+('Spooky'), 
+('Christmas');
+
+INSERT INTO types (type_name) VALUES 
+('single'), 
+('twopart');
+
+INSERT INTO language (code, name) VALUES 
+('en', 'English'), 
+('de', 'German'), 
+('es', 'Spanish'), 
+('fr', 'French'), 
+('pt', 'Portuguese'), 
+('cs', 'Czech');
+
+INSERT INTO flags (flag_name) VALUES 
+('nsfw'), 
+('religious'), 
+('political'), 
+('racist'), 
+('sexist'), 
+('explicit'),
+('none');
+
+CREATE OR REPLACE FUNCTION buscar_chistes_por_texto(texto_busqueda VARCHAR)
+RETURNS TABLE(id_chiste INT, id_idioma INT, category_id INT, type_id INT, joke TEXT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT *
+    FROM jokes
+    WHERE LOWER(jokes.joke) LIKE LOWER('%' || texto_busqueda || '%');
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION obtener_chistes_sin_flags()
+RETURNS TABLE (
+    id_chiste INT,
+    id_idioma INT,
+    category_id INT,
+    type_id INT,
+    joke TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT j.id_chiste, j.id_idioma, j.category_id, j.type_id, j.joke
+    FROM jokes j
+    LEFT JOIN jokes_flags jf ON j.id_chiste = jf.joke_id_chiste
+    WHERE jf.joke_id_chiste IS NULL;
+END;
+$$ LANGUAGE plpgsql;

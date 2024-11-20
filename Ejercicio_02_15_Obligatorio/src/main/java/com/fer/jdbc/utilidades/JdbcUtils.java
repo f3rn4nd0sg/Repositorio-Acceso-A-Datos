@@ -20,7 +20,7 @@ public class JdbcUtils {
 	static ResultSet rs; // la tabla de resultados al hacer la consulta
 	static Statement statement; // para hacer las consultas
 	static PreparedStatement stmt; // para hacer consultas seguras
-	static CallableStatement cstmt;
+	static CallableStatement cstmt; // para funciones en bdd
 
 	/**
 	 * Dados un parametros, abre la BDD y el statement para poder hacer consultas
@@ -39,6 +39,14 @@ public class JdbcUtils {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	/**
+	 * 
+	 * @return La conexión a la BDD
+	 */
+	public static Connection getConnection() {
+		return con;
 	}
 
 	/**
@@ -67,7 +75,6 @@ public class JdbcUtils {
 	 */
 	public static ResultSet devolverConsulta(String query) {
 		try {
-
 			return statement.executeQuery(query);
 		} catch (SQLException e) {
 			return null;
@@ -90,6 +97,20 @@ public class JdbcUtils {
 	}
 
 	/**
+	 * Dada una query de DDL ejecuta la query y devuelve si se ha podido o no
+	 * 
+	 * @param query
+	 * @return true si se ha ejectuado con exito, false si ha fallado
+	 */
+	public static boolean ejecutarDDL(String query) {
+		try {
+			return statement.execute(query);
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Método genérico que le pasas una sql preparedStatement y tantos atributos
 	 * como interrogantes hay en la sql
 	 * 
@@ -103,6 +124,12 @@ public class JdbcUtils {
 		return devolverPreparedStatement(sql, Arrays.asList(parameters));
 	}
 
+	public static ResultSet devolverPreparedStatementVacio(String sql, Object... parameters) { // Este object es como un
+		// array indefinido de
+		// atributos
+		return devolverPreparedStatementVacio(sql, Arrays.asList(parameters));
+	}
+
 	/**
 	 * Método genérico que le pasas una sql preparedStatement y una lista de
 	 * atributos donde sustituir los datos en los interroganres de la sql
@@ -112,20 +139,35 @@ public class JdbcUtils {
 	 * @return ResultSet de la preparedStatement
 	 */
 	public static ResultSet devolverPreparedStatement(String sql, List<Object> parameters) {
-		if (parameters.size() != countMatches(sql, '?'))
+		if (parameters.size() != countMatches(sql, '?')) {
 			return null;
-		else {
+		} else {
 			try {
 				stmt = con.prepareStatement(sql);
 				for (int i = 0; i < parameters.size(); i++) {
 					stmt.setObject(i + 1, parameters.get(i));
 				}
-				return stmt.executeQuery(sql);
+				return stmt.executeQuery();
 			} catch (SQLException e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
-
+	}
+	
+	
+	public static void devolverPreparedStatementVacío(String sql, List<Object> parameters) {
+		if (parameters.size() != countMatches(sql, '?')) {
+		} else {
+			try {
+				stmt = con.prepareStatement(sql);
+				for (int i = 0; i < parameters.size(); i++) {
+					stmt.setObject(i + 1, parameters.get(i));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -140,15 +182,14 @@ public class JdbcUtils {
 		return (int) cadena.chars().filter(e -> e == caracterBuscado).count();
 	}
 
-	public static Object ejecutarCallableStatement(String metodo,int tipoDevuelto, Object... parametros) {
-		if(countMatches(metodo,'?')!= parametros.length)
+	public static Object ejecutarCallableStatement(String metodo, int tipoDevuelto, Object... parametros) {
+		if (countMatches(metodo, '?') != parametros.length)
 			return null;
 		try {
-			CallableStatement cStmt = con.prepareCall(
-					 "{call " + metodo + "}");
+			CallableStatement cStmt = con.prepareCall("{call " + metodo + "}");
 			cStmt.registerOutParameter(1, tipoDevuelto);
-			for(int i=1;i<=parametros.length;i++) {
-				cStmt.setObject(i, parametros[i-1]);
+			for (int i = 1; i <= parametros.length; i++) {
+				cStmt.setObject(i, parametros[i - 1]);
 			}
 			cStmt.execute();
 			return cStmt.getObject(1);
@@ -157,28 +198,44 @@ public class JdbcUtils {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Dado el nombre de un metodo y sus astributos devuelve tabla resultado de la consulta
+	 * Dado el nombre de un metodo y sus astributos devuelve tabla resultado de la
+	 * consulta
+	 * 
 	 * @param metodo
 	 * @param parametros
 	 * @return
 	 */
-	public static ResultSet resultSetCallableStatement(String metodo,Object... parametros) {
-		if(countMatches(metodo,'?')!= parametros.length)
+	public static ResultSet resultSetCallableStatement(String metodo, Object... parametros) {
+		if (countMatches(metodo, '?') != parametros.length)
 			return null;
 		try {
-			cstmt = con.prepareCall("{call " + metodo + "}");			
-			for(int i=1;i<=parametros.length;i++) {
-				cstmt.setObject(i, parametros[i-1]);
-			}			
+			cstmt = con.prepareCall("{call " + metodo + "}");
+			for (int i = 1; i <= parametros.length; i++) {
+				cstmt.setObject(i, parametros[i - 1]);
+			}
 			return cstmt.executeQuery();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
-
+	
+	/**
+	 * Metodo sobrecargado que le pasas solo el nombre del metodo y devuelve la tabla resultado
+	 * @param metodo
+	 * @return
+	 */
+	public static ResultSet resultSetCallableStatement(String metodo) {
+	    try {
+	        cstmt = con.prepareCall("{call " + metodo + "}");
+	        return cstmt.executeQuery();
+	    } catch (SQLException e) {
+	        System.out.println("Error al ejecutar la consulta");
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
 }
