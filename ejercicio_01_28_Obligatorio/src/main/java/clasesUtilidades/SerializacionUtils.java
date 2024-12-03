@@ -76,6 +76,7 @@ public class SerializacionUtils {
 	public static <T> List<T> deserializarListaObjetos(String rutaCompleta) {
 		try {
 			ObjectInputStream ficheroObjetos = new ObjectInputStream(new FileInputStream(new File(rutaCompleta)));
+			@SuppressWarnings("unchecked")
 			List<T> lista = (List<T>) ficheroObjetos.readObject(); // Serializa
 			ficheroObjetos.close();
 			return lista;

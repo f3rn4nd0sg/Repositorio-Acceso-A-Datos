@@ -200,6 +200,7 @@ public class App {
 	private static void serializarUltimoTiempoCiudad() {
 		List<TiempoCiudad> tiemposEnFichero = null;
 		try {
+			//Guardo los tiempos anteriores serializados en una lista
 			tiemposEnFichero = SerializacionUtils.deserializarListaDeJson(rutaTiemposDat);
 		} catch (IOException e) {
 			// Error deserializando

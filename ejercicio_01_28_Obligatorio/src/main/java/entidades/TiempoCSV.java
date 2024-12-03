@@ -1,4 +1,4 @@
-package entidades;
+ package entidades;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,7 +42,6 @@ public class TiempoCSV {
 
 	// Método para leer todo el csv
 	public static ArrayList<TiempoCSV> leerCSV(String filePath) {
-		
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 			ArrayList<TiempoCSV> listaTiemposCSV = new ArrayList<TiempoCSV>();
 			String line;
@@ -60,28 +59,27 @@ public class TiempoCSV {
 		}
 	}
 
-	// Funcionamiento, transforma las fechas pasadas a LocalDateTime, compara en
+	// Transforma las fechas pasadas a LocalDateTime, compara en
 	// toda la lista de datos si el dato está correspondido entre las fechas
-	//Construye macroString con todas las fechas que coincide, cuando termina con los datos de una fecha, \n y así con las siguientes
-	//No muy eficiente
+	// Construye macroString con todas las fechas que coincide, cuando termina con
+	// los datos de una fecha, \n y así con las siguientes
+	// No muy eficiente 
 
 	public static void imprimirEvolucionTemperatura(List<TiempoCSV> datos, String fechaInicioStr,
 			String fechaFinalStr) {
-		
+		// Formateadores de fecha y hora
 		DateTimeFormatter fechaHoraFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		DateTimeFormatter fechaSalidaFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+		// Convertir las cadenas de fecha de inicio y final a objetos LocalDateTime
 		LocalDateTime fechaInicio = LocalDateTime.parse(fechaInicioStr + " 00:00", fechaHoraFormatter);
 		LocalDateTime fechaFinal = LocalDateTime.parse(fechaFinalStr + " 23:59", fechaHoraFormatter);
 
-		// La línea con todos los datos
+		// StringBuilder para construir la salida
 		StringBuilder salida = new StringBuilder();
 		String fechaActual = "";
 
 		// Iterar a través de cada intervalo de 3 horas entre fechaInicio y fechaFinal
-
-		// for(empieza en fecha de inicio,hasta que sea la fecha final, iterando hora de
-		// 3 en 3)
 		for (LocalDateTime fechaHora = fechaInicio; !fechaHora.isAfter(fechaFinal); fechaHora = fechaHora
 				.plusHours(3)) {
 			String nuevaFecha = fechaHora.format(fechaSalidaFormatter);
@@ -100,13 +98,10 @@ public class TiempoCSV {
 			for (TiempoCSV tiempo : datos) {
 				try {
 					// Verifica si la fecha y hora coincide con la fechaHora actual
-					if (tiempo.getFecha().equals(fechaHora.toLocalDate().toString())
-							&& tiempo.getHora().equals(horaFormato)) {
-
+					if (tiempo.getFecha().equals(fechaHora.toLocalDate().toString()) && tiempo.getHora().equals(horaFormato)) {
 						// Agrega hora y la temperatura al StringBuilder
 						salida.append(horaFormato).append("->").append(String.format("%.2f", tiempo.getTemperatura()))
 								.append(" ");
-
 						// Sale del bucle
 						break;
 					}

@@ -66,6 +66,7 @@ public class TiempoCiudad {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
 		document.getDocumentElement().normalize();
+		//el xmlContent se "normaliza" para poder leerlo mejor
 
 		//Datos de la ciudad
 		Element cityElement = (Element) document.getElementsByTagName("city").item(0);
@@ -89,10 +90,11 @@ public class TiempoCiudad {
 		dt = dt.split("T")[0];
 
 		// Leer datos de 'main'
-		double feelsLike = Double.parseDouble(getElementAttribute(document, "feels_like", "value"));
+		double feelsLike = Double.parseDouble(getElementAttribute(document, "feels_like", "value")); //Ej, le paso tagName y el atributo que quiero
+		//Me devuelve el value del feels_like
 		double tempMin = Double.parseDouble(tempElement.getAttribute("min"));
 		double tempMax = Double.parseDouble(tempElement.getAttribute("max"));
-		double pressure = Double.parseDouble(getElementAttribute(document, "pressure", "value"));
+		double pressure = Double.parseDouble(getElementAttribute(document, "pressure", "value")); 
 		mainList main = new mainList(tempKelvin, feelsLike, tempMin, tempMax, pressure, humedad, 0, 0);
 
 		//Datos del clima
@@ -120,6 +122,7 @@ public class TiempoCiudad {
 	}
 
 	// Métodos para lectura del xml más sencillos
+	// Devuelve el contenido del primer texto con el tagName que le pasamos
 	private static String getElementTextContent(Document document, String tagName) {
 		NodeList nodeList = document.getElementsByTagName(tagName);
 		if (nodeList.getLength() > 0) {
@@ -129,6 +132,7 @@ public class TiempoCiudad {
 	}
 
 	// Este igual que el de arriba
+	// Devuelve el valor del atributo del primer elemento con el tagName que le pasamos
 	private static String getElementAttribute(Document document, String tagName, String attributeName) {
 		NodeList nodeList = document.getElementsByTagName(tagName);
 		if (nodeList.getLength() > 0) {
