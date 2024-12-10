@@ -94,5 +94,37 @@
     "humedad": 89.0,
     "pais": "JP",
     "dt": "2024-10-26"
+  },
+  {
+    "name": "Albacete",
+    "main": {
+      "temp": 282.6,
+      "feels_like": 282.6,
+      "temp_min": 282.6,
+      "temp_max": 283.25,
+      "pressure": 1023.0,
+      "humidity": 76.0,
+      "sea_level": 0.0,
+      "grnd_level": 0.0
+    },
+    "weather": [
+      {
+        "id": 0,
+        "main": "cielo claro",
+        "description": "cielo claro",
+        "icon": "01n"
+      }
+    ],
+    "sys": {
+      "country": "ES",
+      "sunrise": "2024-11-26T07:02:53",
+      "sunset": "2024-11-26T16:48:19"
+    },
+    "temp": 282.6,
+    "clima": "cielo claro",
+    "tempCelsius": 9.450000000000045,
+    "humedad": 76.0,
+    "pais": "ES",
+    "dt": "2024-11-26"
   }
 ]
